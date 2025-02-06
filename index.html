@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agricultural Plot Monitor</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="app">
+        <div class="header">
+            <!-- Left side: Logo and Plant Image -->
+            <div class="header-left">
+                <img src="./assets/banana.svg" alt="Crop Icon" class="crop-icon" />
+                <div class="title-container">
+                    <h1>Banana Crop Hydrological Monitor in Berambadi Catchment</h1>
+                    <p class="subtitle">Remote Sensing & Water Parameter Viewer</p>
+                </div>
+            </div>
+            <!-- Right side: Satellite Icon -->
+            <div class="header-right">
+                <i class="fas fa-satellite satellite-icon"></i>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="select-group">
+                <label for="plotSelect">
+                    <i class="fas fa-map-marker-alt"></i> Select Plot
+                </label>
+                <select id="plotSelect" v-model="selectedPlot" @change="onPlotChange">
+                    <option v-for="plot in availablePlots" :key="plot" :value="plot">
+                        {{ plot }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="select-group">
+                <label for="variableSelect">
+                    <i class="fas fa-chart-bar"></i> Select Variable
+                </label>
+                <select id="variableSelect" v-model="selectedVariable" @change="onVariableChange">
+                    <option v-for="variable in availableVariables" :key="variable.value" :value="variable.value">
+                        {{ variable.label }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="map"></div>
+            <div id="chartContainer">
+                <canvas id="chartCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>© <span id="year"></span> Developed by <strong>Dr. Sathyanarayan Rao</strong></p>
+            <p>Agricultural Remote Sensing Lab</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
