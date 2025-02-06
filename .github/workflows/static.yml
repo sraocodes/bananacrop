@@ -1,4 +1,4 @@
-name: Deploy Vue.js Application to GitHub Pages
+name: Deploy Static Site to GitHub Pages
 
 on:
   push:
@@ -16,47 +16,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set Up Pages
-        id: pages
-        uses: actions/configure-pages@v5
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          node-version: '16'  # Use the Node.js version that matches your local development environment
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build Vue.js Application
-        run: npm run build  # Ensure this script exists in your package.json and properly builds your project to the 'dist' directory
-
-      - name: Package Site
-        run: |
-          tar -czf site.tar.gz -C dist .
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: github-pages
-          path: site.tar.gz
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: github-pages
+          path: '.'  # Upload the entire repository content
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          path: github-pages/site.tar.gz
