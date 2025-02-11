@@ -11,6 +11,9 @@
  * - Chart.js: Time-series visualization
  */
 
+
+
+
 // ---------------------- Vue Instance Setup ----------------------
 var app = new Vue({
     el: '#app',
@@ -42,6 +45,33 @@ var app = new Vue({
         }
     },
 
+
+// ------------------------------------------------------------------------------- 
+// HOOKS in Vue Life cycle ----------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------- 
+
+
+// =============================================
+// Before Creation:
+// - Vue instance doesn't exist yet
+// - No access to our data properties like timeseriesData, watershedData
+// - Can't access our methods like updateChart, updatePlotMarker
+// =============================================
+
+// =============================================
+// During Creation (created hook):
+// What happens in our app:
+// 1. Vue instance created
+// 2. Our data properties become reactive:
+//    - timeseriesData (for CSV)
+//    - watershedData (for GeoJSON)
+//    - availablePlots, selectedPlot, etc.
+// 3. Perfect time to load our data files:
+//    - Loads data.csv using Papa.parse
+//    - Loads boundary.geojson using fetch
+// 4. DOM elements (#map, #chartCanvas) not ready yet
+// =============================================
+
     // ---------------------- Data Loading (CSV & GeoJSON) ----------------------
     created: function() {
         // Load CSV data using PapaParse
@@ -70,6 +100,21 @@ var app = new Vue({
                 }
             });
     },
+
+
+// =============================================
+// During Mounting (mounted hook):
+// What happens in our app:
+// 1. DOM is ready - can access #map and #chartCanvas
+// 2. Initialize our map:
+//    - Creates Leaflet map instance
+//    - Sets view to watershed location
+//    - Adds OpenStreetMap layer
+// 3. Initialize our chart:
+//    - Creates Chart.js instance
+//    - Sets up axes and styling
+// 4. If watershedData is loaded, adds boundary layer
+// =============================================
 
     // ---------------------- Vue Mounted Lifecycle Hook ----------------------
     mounted: function() {
@@ -130,6 +175,12 @@ var app = new Vue({
 
         if (this.watershedData) this.addBoundaryLayer();
     },
+
+// After Mounting:
+// - App is fully interactive
+// - Methods can be called (onPlotChange, updateChart, etc.)
+// - User can select plots and variables
+// =============================================
 
     // ---------------------- Methods ----------------------
     methods: {
